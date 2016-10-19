@@ -1,0 +1,215 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+
+
+\title{Práctica 2 - Interfaces Gráficas de Usuaria en android}
+\author{Interfaces Persona Máquina}
+\date{Curso 16/17}
+
+\renewcommand{\abstractname}{Objetivos}
+
+
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+  Aplicar los conocimientos adquiridos sobre el desarrollo de
+  interfaces gráficas de usuaria creando una aplicación para la
+  plataforma android.
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Descripción}
+
+La aplicación que desarrollarás será un aleatorizador de listas
+genérico que facilite la toma de decisiones en grupos.
+
+Los siguientes apartados describen los \emph{sprints} que debes
+realizar según la planificación establecida.
+
+
+\subsection{Requisitos no funcionales}
+\begin{itemize}
+\item La implementación se realizará con las herramientas y lenguajes
+  definidas por la plataforma android.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sprint 1}
+
+En este \emph{sprint} debes realizar los siguientes pasos:
+
+\begin{enumerate}
+\item Diseña una IU que permita ver una lista de categorías y realizar
+  las tareas básicas sobre ella: añadir, borrar, editar. Cada
+  categoría viene identificada por su nombre.
+
+  Puedes emplear el formato de tu elección para documentar el diseño.
+
+\item Haz un diseño software de la aplicación para dar soporte a la
+  interface que acabas de diseñar.
+
+  El diseño debe ajustarse a la idea básica del MVC: separar la vista
+  del modelo.
+
+  Para documentar el diseño debes usar los diagramas UML necesarios.
+
+\item Implementa el diseño.
+
+\item Valida todos los pasos anteriores, en especial el funcionamiento
+  de tu implementación. A continuación asígnale al último commit del
+  repositorio la etiqueta \texttt{sprint1}.
+
+\item Valida el contenido del repositorio remoto\footnote{HINT:
+    después de clonarlo, puedes hacer un reset a la etiqueta
+    \texttt{sprint1} (\texttt{git reset --hard sprint1})}.
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sprint 2}
+
+En este \emph{sprint} debes realizar los siguientes pasos:
+
+\begin{enumerate}
+\item Cada categoría tiene a su vez asociada una lista de elementos,
+  igualmente caracterizados por un nombre.
+
+  Incrementa el diseño de la IU de manera que al seleccionar un
+  elemento de la lista de categorías, permita ver su lista de
+  elementos asociada. También deben se posible realizar las tareas
+  básicas sobre esta última lista: añadir, borrar, editar.
+
+\item Haz un diseño software de la aplicación para dar soporte a la
+  interface que acabas de diseñar.
+
+  El diseño debe ajustarse a la idea básica del MVC: separar la vista
+  del modelo.
+
+  Para documentar el diseño debes usar los diagramas UML necesarios.
+
+\item Implementa el diseño.
+
+\item Valida todos los pasos anteriores, en especial el funcionamiento
+  de tu implementación. A continuación asígnale al último commit del
+  repositorio la etiqueta \texttt{sprint2}.
+
+\item Valida el contenido del repositorio remoto.
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sprint 3}
+
+En este \emph{sprint} debes realizar los siguientes pasos:
+
+\begin{enumerate}
+\item Incrementa el diseño de la IU de forma que, mientras se están
+  visualizando los elementos de una categoría, sea posible seleccionar
+  uno de manera aleatoria y mostrarlo como único elemento en pantalla.
+
+  Para crear una selección aleatoria, debes considerar las siguientes
+  acciones:
+
+  \begin{itemize}
+  \item Agitar el dispositivo\footnote{Ten en cuenta que no es posible
+      en el emulador.}.
+  \item Girar el dispositivo (horizontal $\leftrightarrow$ vertical) dos
+    veces en menos de un segundo.
+  \item Colocar el dispositivo boca abajo, esperar entre uno y dos
+    segundos y levantarlo.
+  \end{itemize}
+
+\item Incrementa el diseño software de la aplicación para dar soporte
+  a los cambios que estás introduciendo.
+
+\item Implementa el diseño.
+
+  OJO: Ten en cuenta que no todos los dispositivos tienen las mismas
+  capacidades. Por lo tanto deberás comprobar en ejecución cual de los
+  tres métodos es viable.
+
+\item Valida todos los pasos anteriores, en especial el funcionamiento
+  de tu implementación. A continuación asígnale al último commit del
+  repositorio la etiqueta \texttt{sprint3}.
+
+\item Valida el contenido del repositorio remoto.
+\end{enumerate}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sprint 4}
+
+
+En este \emph{sprint} debes realizar los siguientes pasos:
+
+\begin{enumerate}
+\item Incrementa el diseño de la IU con un apartado dedicado a
+  aprovechar las pantallas de las tablets.
+
+\item Incrementa el diseño software de la aplicación para dar soporte
+  a los cambios que estás introduciendo.
+
+\item Implementa el diseño.
+
+  HINT: Si no lo has hecho ya, seguramente tendrás que sustituir tus
+  \texttt{Acitivity}s por \texttt{Fragment}s.
+
+\item Valida todos los pasos anteriores, en especial el funcionamiento
+  de tu implementación. A continuación asígnale al último commit del
+  repositorio la etiqueta \texttt{sprint4}.
+
+\item Valida el contenido del repositorio remoto.
+\end{enumerate}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sprint 5}
+
+
+En este \emph{sprint} debes realizar los siguientes pasos:
+
+\begin{enumerate}
+\item Internacionaliza la aplicación.
+
+  Usa los mecanismos provistos por la plataforma para el soporte de
+  idiomas.
+
+\item Localiza el idioma de la aplicación a dos idiomas de tu
+  preferencia.
+
+\item Documenta y corrige los casos en que la interface no cumple el
+  principio ``principle of least astonishment''.
+
+\item Documenta y corrige los casos en que la interface:
+  \begin{itemize}
+  \item no gestiona los errores,
+  \item no proporciona \textit{feedback} cuando es necesario,
+  \item no gestiona la concurrencia, i.e. se bloquea,
+  \item no gestiona el ciclo de vida de la aplicación,
+  \end{itemize}
+
+\item Documenta y corrige los casos en que la interface no cumple las
+  \emph{Android User Interface Guidelines}.
+
+\item Valida todos los pasos anteriores, en especial el funcionamiento
+  de tu implementación. A continuación asígnale al último commit del
+  repositorio la etiqueta \texttt{sprint5}.
+
+\item Valida el contenido del repositorio remoto.
+\end{enumerate}
+
+
+
+\end{document}
