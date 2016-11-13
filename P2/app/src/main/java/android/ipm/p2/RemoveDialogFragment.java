@@ -62,19 +62,19 @@ public class RemoveDialogFragment extends DialogFragment {
         TextView editText = (TextView) vie.findViewById(R.id.remove_text);
 
         int n = 0;
-        int n_selected = selected.size();
-        // Cuenta el número de elementos seleccionados para mostrar el correspondiente mensaje de aviso
-        for (int i = 0; i < n_selected; i++) {
-            if (selected.valueAt(i)){
-                n++;
+        if (selected != null) {
+            int n_selected = selected.size();
+            // Cuenta el número de elementos seleccionados para mostrar el correspondiente mensaje de aviso
+            for (int i = 0; i < n_selected; i++) {
+                if (selected.valueAt(i)) {
+                    n++;
+                }
             }
         }
         if (n > 1) {
             editText.setText(getString(R.string.delete_warning_plu1) + " " +  n + " " + getString(R.string.delete_warning_plu2));
-            //builder.setMessage(getString(R.string.delete_warning_plu1) + " " +  n + " " + getString(R.string.delete_warning_plu2));
         } else {
             editText.setText(R.string.delete_warning_sing);
-            //builder.setMessage(R.string.delete_warning_sing);
         }
 
         builder.setView(vie)
