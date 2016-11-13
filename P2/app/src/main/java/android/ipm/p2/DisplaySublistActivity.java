@@ -5,6 +5,11 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,17 +22,27 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DisplaySublistActivity extends AppCompatActivity implements AddDialogFragment.AddDialogListener,
-        EditDialogFragment.EditDialogListener, RemoveDialogFragment.RemoveDialogListener, ActivityCommunications{
+        EditDialogFragment.EditDialogListener, RemoveDialogFragment.RemoveDialogListener, ActivityCommunications, SensorEventListener {
     private ArrayList<String> elements = new ArrayList<>();
     private ListView listView;
-    ActionMode actionMode;
-    ArrayAdapter<String> adapter;
-    String categoryName;
+    private ActionMode actionMode;
+    private ArrayAdapter<String> adapter;
+    private String categoryName;
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private long lastUpdate = 0;
+    private float last_x = 0;
+    private float last_y = 0;
+    private float last_z = 0;
+    private static final int SHAKE_THRESHOLD = 1500;
+    private boolean isFaceUp = true;
+    private long timeFacedDown = 0;
+    private long orientationChangedTime = 0;
+    private boolean accelerometerAvaliable = false;
 
     @Override
     public Activity getActivity() {
@@ -74,10 +89,8 @@ public class DisplaySublistActivity extends AppCompatActivity implements AddDial
             Context context = getActivity();
             SharedPreferences dataStorage = context.getSharedPreferences(MainActivity.CATEGORIES, Context.MODE_PRIVATE);
             Set<String> storedCategories = dataStorage.getStringSet(categoryName, null);
-            if (storedCategories != null) {   // Si los hay, se añaden a la lista de elementos
+            if (storedCategories != null)   // Si los hay, se añaden a la lista de elementos
                 elements.addAll(storedCategories);
-                Collections.sort(elements);
-            }
         }
         adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1,
@@ -86,6 +99,10 @@ public class DisplaySublistActivity extends AppCompatActivity implements AddDial
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new MultiChoiceListenerImpl(this));
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (mAccelerometer != null)
+            accelerometerAvaliable = true;
     }
 
 
@@ -100,6 +117,20 @@ public class DisplaySublistActivity extends AppCompatActivity implements AddDial
         editor.putStringSet(categoryName, items);        // Se guardan los elementos actuales usando el editor
         // Commit the edits!
         editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (accelerometerAvaliable)
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (accelerometerAvaliable)
+            mSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -160,7 +191,6 @@ public class DisplaySublistActivity extends AppCompatActivity implements AddDial
      */
     private void addElement(String value) {
         elements.add(value);
-        Collections.sort(elements);
         adapter.notifyDataSetChanged();
     }
 
@@ -245,8 +275,7 @@ public class DisplaySublistActivity extends AppCompatActivity implements AddDial
         } else {
             String oldValue = elements.get(selected);
             elements.remove(oldValue);
-            elements.add(value);
-            Collections.sort(elements);
+            elements.add(selected, value);
             adapter.notifyDataSetChanged();
         }
     }
@@ -269,5 +298,77 @@ public class DisplaySublistActivity extends AppCompatActivity implements AddDial
 
     private boolean isRepeated(String value) {
         return (elements.contains(value));
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - lastUpdate) > 100) {
+                long diffTime = (currentTime - lastUpdate);
+                lastUpdate = currentTime;
+
+                float x = event.values[0];
+                float y = event.values[1];
+                float z = event.values[2];
+
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+                if (speed > SHAKE_THRESHOLD) {
+                    Toast.makeText(this, "shake detected w/ speed: " + speed, Toast.LENGTH_SHORT).show();
+                    launchRandomizer();
+                }
+                last_x = x;
+                last_y = y;
+                last_z = z;
+
+                if (z > 9 && z < 10) {
+                    if (!isFaceUp) {
+                        isFaceUp = true;
+                        timeFacedDown = currentTime - timeFacedDown;
+                        if ((timeFacedDown > 1000) && (timeFacedDown < 2000)) {
+                            Toast.makeText(this, "Faced down between 1 and 2 secs", Toast.LENGTH_SHORT).show();
+                            launchRandomizer();
+                        }
+                    }
+                } else if (z > -10 && z < -9) {
+                    if (isFaceUp) {
+                        isFaceUp = false;
+                        timeFacedDown = System.currentTimeMillis();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        System.out.println("ConfigurationChanged");
+        long currentTime = System.currentTimeMillis();
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if ((currentTime - orientationChangedTime) < 1000) {
+                Toast.makeText(this, "Orientation changed in less than 1 sec", Toast.LENGTH_SHORT).show();
+                launchRandomizer();
+            }
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if ((currentTime - orientationChangedTime) < 1000) {
+                Toast.makeText(this, "Orientation changed in less than 1 sec", Toast.LENGTH_SHORT).show();
+                launchRandomizer();
+            }
+        }
+        orientationChangedTime = currentTime;
+    }
+
+    private void launchRandomizer() {
+        Intent intent = new Intent(this, ShowRandomEntryActivity.class);
+        intent.putExtra(MainActivity.SUBLIST_NAME, categoryName);
+        startActivity(intent);
     }
 }
