@@ -9,6 +9,6 @@
     <string name="delete_warning_plu1">Are you sure you want to remove</string>
     <string name="delete_warning_plu2">entries?</string>
     <string name="delete_warning_sing">Are you sure you want to remove this entry?</string>
-    <string name="error_empty_name">Name cannot be empty</string>
+    <string name="error_empty_name">Category name cannot be empty</string>
     <string name="error_repeated_name">This name is already in use</string>
 </resources>

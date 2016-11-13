@@ -5,16 +5,15 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,16 +21,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements AddDialogFragment.AddDialogListener,
-        EditDialogFragment.EditDialogListener, RemoveDialogFragment.RemoveDialogListener,
-        ActivityCommunications {
-    public static final String CATEGORIES = "Categories";
-    public static final String MAIN_LIST = "MainList"; // El diccionario usa este nombre para guardar los datos
-    public static final String SUBLIST_NAME = "SublistName";
+public class DisplaySublistActivity extends AppCompatActivity implements AddDialogFragment.AddDialogListener,
+        EditDialogFragment.EditDialogListener, RemoveDialogFragment.RemoveDialogListener, ActivityCommunications{
+    private ArrayList<String> elements = new ArrayList<>();
     private ListView listView;
-    private ArrayList<String> elements = new ArrayList<>();   // elementos de la lista principal
-    private ArrayAdapter<String> adapter;
-    private ActionMode actionMode;  // referencia al menú contextual
+    ActionMode actionMode;
+    ArrayAdapter<String> adapter;
+    String categoryName;
 
     @Override
     public Activity getActivity() {
@@ -62,14 +58,22 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_display_sublist);
+        listView = (ListView) findViewById(R.id.mysublist);
 
-        listView = (ListView) findViewById(R.id.mylist);
+        Intent intent = getIntent();
+        categoryName = intent.getStringExtra(MainActivity.SUBLIST_NAME);
+        ActionBar a = getSupportActionBar();
+        if (a != null) {
+            a.setDisplayHomeAsUpEnabled(true);
+            a.setTitle(categoryName);
+        }
 
-        Context context = getActivity();
-        SharedPreferences dataStorage = context.getSharedPreferences(CATEGORIES, Context.MODE_PRIVATE);  // Obtener datos almacenados
-        Set<String> storedCategories = dataStorage.getStringSet(CATEGORIES, null);
+
         if (savedInstanceState == null) {   // Si el diccionario está vacío se comprueba si hay datos almacenados
+            Context context = getActivity();
+            SharedPreferences dataStorage = context.getSharedPreferences(MainActivity.CATEGORIES, Context.MODE_PRIVATE);
+            Set<String> storedCategories = dataStorage.getStringSet(categoryName, null);
             if (storedCategories != null) {   // Si los hay, se añaden a la lista de elementos
                 elements.addAll(storedCategories);
                 Collections.sort(elements);
@@ -82,30 +86,21 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new MultiChoiceListenerImpl(this));
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View v,
-                                    int position, long id) {
-                String categoryName = elements.get(position);
-                Intent intent = new Intent(MainActivity.this, DisplaySublistActivity.class);
-                intent.putExtra(SUBLIST_NAME, categoryName);
-                startActivity(intent);
-            }
-        });
     }
+
 
     @Override
     protected void onStop() {
         super.onStop();
         Context context = getActivity();
-        SharedPreferences settings = context.getSharedPreferences(CATEGORIES, Context.MODE_PRIVATE);
+        SharedPreferences settings = context.getSharedPreferences(MainActivity.CATEGORIES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();  // Se obtiene un editor de los datos almacenados
-        Set<String> categories = new HashSet<>();
-        categories.addAll(elements);
-        editor.putStringSet(CATEGORIES, categories);        // Se guardan los elementos actuales usando el editor
+        Set<String> items = new HashSet<>();
+        items.addAll(elements);
+        editor.putStringSet(categoryName, items);        // Se guardan los elementos actuales usando el editor
         // Commit the edits!
         editor.apply();
     }
-
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -113,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
         super.onRestoreInstanceState(savedInstanceState);
 
         // Restore state members from saved instance
-        ArrayList<String> oldElements = savedInstanceState.getStringArrayList(MAIN_LIST);   // Se obtiene la lista principal del diccionario
+        ArrayList<String> oldElements = savedInstanceState.getStringArrayList(categoryName);   // Se obtiene la lista principal del diccionario
         if (oldElements != null) {  // Si no está vacía
             elements.addAll(oldElements);    // Se añaden los elementos
             adapter.notifyDataSetChanged();
@@ -124,14 +119,13 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         // savedInstanceState guarda pares de valores
         // Save the user's current list data
-        savedInstanceState.putStringArrayList(MAIN_LIST, elements);
+        savedInstanceState.putStringArrayList(categoryName, elements);
         if (actionMode != null)     // Si el menú contextual está abierto, se cierra
             actionMode.finish();
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
-
 
     /**
      * Función que se llama para crear la app bar
@@ -141,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
         getMenuInflater().inflate(R.menu.app_bar, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
     /**
      * Función a la que se llama cuando se hace click en un botón de la app bar
@@ -178,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
         DialogFragment dialog = new AddDialogFragment();
         dialog.show(getFragmentManager(), "AddDialogFragment");
     }
+
 
     /**
      * Función que muestra el diálogo de editar
@@ -250,13 +244,6 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
             toast.show();
         } else {
             String oldValue = elements.get(selected);
-            Context context = getActivity();
-            SharedPreferences settings = context.getSharedPreferences(CATEGORIES, Context.MODE_PRIVATE);
-            Set<String> storedList = settings.getStringSet(oldValue, null);
-            SharedPreferences.Editor editor = settings.edit();  // Se obtiene un editor de los datos almacenados
-            editor.remove(oldValue);
-            editor.putStringSet(value, storedList);
-            editor.commit();
             elements.remove(oldValue);
             elements.add(value);
             Collections.sort(elements);
@@ -264,24 +251,15 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
         }
     }
 
-    /**
-     * Función que se llama en una respuesta positiva del diálogo de eliminar
-     * Recibe las posiciones seleccionadas en forma de SparseBooleanArray
-     */
     @Override
     public void onRemovePositiveClick(SparseBooleanArray selected) {
-        Context context = getActivity();
         int n;
         n = adapter.getCount();
         // Recorre todos los elementos, empezando por el final, borrando los seleccionados
         for (int i = (n - 1); i >= 0; i--) {
             if (selected.indexOfKey(i) >= 0) {  // Si el elemento está en el SparseBooleanArray
                 if (selected.get(i)) {          // se comprueba si está seleccionado o no
-                    SharedPreferences settings = context.getSharedPreferences(CATEGORIES, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = settings.edit();  // Se obtiene un editor de los datos almacenados
-                    editor.remove(elements.get(i));
-                    editor.commit();
-                    elements.remove(elements.get(i));
+                    elements.remove(adapter.getItem(i));
                     adapter.notifyDataSetChanged();
                     selected.put(i, false);
                 }
@@ -292,5 +270,4 @@ public class MainActivity extends AppCompatActivity implements AddDialogFragment
     private boolean isRepeated(String value) {
         return (elements.contains(value));
     }
-
 }
