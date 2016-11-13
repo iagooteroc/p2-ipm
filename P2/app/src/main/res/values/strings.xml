@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">P2</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="category_name">Name</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_warning_plu1">Are you sure you want to remove</string>
+    <string name="delete_warning_plu2">entries?</string>
+    <string name="delete_warning_sing">Are you sure you want to remove this entry?</string>
+    <string name="error_empty_name">Name cannot be empty</string>
+    <string name="error_repeated_name">This name is already in use</string>
+</resources>
