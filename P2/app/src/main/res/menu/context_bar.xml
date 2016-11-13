@@ -6,12 +6,12 @@
         android:id="@+id/edit"
         android:title="@string/edit"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_edit" />
+        android:icon="@drawable/ic_create_white_24dp" />
 
     <item
         android:id="@+id/delete"
         android:title="@string/delete"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_delete" />
+        android:icon="@drawable/ic_delete_white_24dp" />
 
 </menu>

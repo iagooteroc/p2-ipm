@@ -53,6 +53,7 @@ public class EditDialogFragment extends DialogFragment {
                 && (savedInstanceState.getBoolean("DISMISS")))
             this.dismissAllowingStateLoss();
     }
+
     //Lo que hace cuando se crea el diálogo(Cuando se abre la ventanita)
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class EditDialogFragment extends DialogFragment {
         EditText editText = (EditText) vie.findViewById(R.id.edit_name);
         editText.setText(text);
         builder.setView(vie)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Dialog editDialog = (Dialog) dialog;

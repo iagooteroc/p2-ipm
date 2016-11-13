@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="android.ipm.p2.DisplayCategoriesFragment"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorPrimary"
     android:descendantFocusability="blocksDescendants">
 
     <android.support.v7.widget.Toolbar
@@ -22,7 +22,12 @@
         android:background="@color/colorPrimary"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:listSelector="@drawable/listview_selector"/>
+        android:listSelector="@drawable/listview_selector"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:minHeight="48dp"
+        android:scrollbarStyle="insideInset"
+        android:paddingTop="8dp" />
 
 
 </RelativeLayout>

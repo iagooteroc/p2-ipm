@@ -6,8 +6,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.OrientationEventListener;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements DisplayCategories
     private long orientationChangedTime = 0;
     private OrientationEventListener mOrientationListener;
     private int oldRotation = Surface.ROTATION_0;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements DisplayCategories
             fragment.setArguments(bundle);
             if (findViewById(R.id.fragment_container) != null) {
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
+                //fragmentTransaction.addToBackStack(null);
             } else if (findViewById(R.id.subfragment_container) != null) {
                 fragmentTransaction.replace(R.id.subfragment_container, fragment);
             }
@@ -193,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements DisplayCategories
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+        super.onSaveInstanceState(savedInstanceState);
         oldRotation = savedInstanceState.getInt("ROTATION");
         orientationChangedTime = savedInstanceState.getLong("ORIENTATION_TIME");
     }
@@ -267,7 +271,10 @@ public class MainActivity extends AppCompatActivity implements DisplayCategories
     }
 
     private void launchRandomizer() {
-        String categoryName = getSupportActionBar().getTitle().toString();
+        String categoryName = "P2";
+        ActionBar a = getSupportActionBar();
+        if (a != null)
+            categoryName = a.getTitle().toString();
         if (categoryName.equals("P2")) {
             SharedPreferences dataStorage = getSharedPreferences(CATEGORIES, Context.MODE_PRIVATE);
             Map<String, Set<String>> allElements = (Map<String, Set<String>>) dataStorage.getAll();
@@ -318,6 +325,25 @@ public class MainActivity extends AppCompatActivity implements DisplayCategories
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 1500);
     }
 
 }

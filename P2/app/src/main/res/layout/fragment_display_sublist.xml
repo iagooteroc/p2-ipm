@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_display_sublist"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="android.ipm.p2.MainActivity"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorPrimary"
     android:descendantFocusability="blocksDescendants">
 
     <android.support.v7.widget.Toolbar
@@ -22,6 +22,11 @@
         android:background="@color/colorPrimary"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:listSelector="@drawable/listview_selector"/>
+        android:listSelector="@drawable/listview_selector"
+        android:scrollbarStyle="insideInset"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:minHeight="48dp" />
 
 </RelativeLayout>

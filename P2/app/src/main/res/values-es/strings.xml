@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">P2</string>
+    <string name="add">Añadir</string>
+    <string name="edit">Editar</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Eliminar</string>
+    <string name="category_name">Nombre</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete_warning_plu1">¿Eliminar</string>
+    <string name="delete_warning_plu2">entradas?</string>
+    <string name="delete_warning_sing">¿Eliminar esta entrada?</string>
+    <string name="error_empty_name">El nombre no puede estar vacío</string>
+    <string name="error_repeated_name">Nombre ya en uso</string>
+    <string name="no_elements_found">No se han encontrado elementos</string>
+    <string name="orientation_changed">La orientación ha cambiado en menos de un segundo</string>
+    <string name="faced_down">Cara abajo entre 1 y 2 segundos</string>
+    <string name="shake_detected">Dispositivo agitado</string>
+    <string name="press_back_again">Pulsa de nuevo para salir</string>
+</resources>

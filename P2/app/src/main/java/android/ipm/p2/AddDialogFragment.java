@@ -48,7 +48,7 @@ public class AddDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View vie = inflater.inflate(R.layout.add_dialog_fragment, null);
         builder.setView(vie)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Dialog addDialog = (Dialog) dialog;

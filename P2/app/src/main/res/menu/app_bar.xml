@@ -5,5 +5,5 @@
         android:id="@+id/action_add"
         android:title="@string/add"
         app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_input_add" />
+        android:icon="@drawable/ic_add_white_24dp" />
 </menu>

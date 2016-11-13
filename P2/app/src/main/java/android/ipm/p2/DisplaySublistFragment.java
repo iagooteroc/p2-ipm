@@ -41,7 +41,7 @@ public class DisplaySublistFragment extends Fragment implements AddDialogFragmen
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             mCallback = (OnUpSelectedListener) context;
@@ -149,14 +149,16 @@ public class DisplaySublistFragment extends Fragment implements AddDialogFragmen
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        ActionBar a = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        ActionBar a = ((AppCompatActivity) getActivity()).getSupportActionBar();
         categoryName = getArguments().getString(MainActivity.SUBLIST_NAME);
-        a.setTitle(categoryName);
-        if (MainActivity.mDualPane) {
-            inflater.inflate(R.menu.app_bar_doublepane, menu);
-        } else {
-            inflater.inflate(R.menu.app_bar_sublist, menu);
-            a.setDisplayHomeAsUpEnabled(true);
+        if (a != null) {
+            a.setTitle(categoryName);
+            if (MainActivity.mDualPane) {
+                inflater.inflate(R.menu.app_bar_doublepane, menu);
+            } else {
+                inflater.inflate(R.menu.app_bar_sublist, menu);
+                a.setDisplayHomeAsUpEnabled(true);
+            }
         }
         super.onCreateOptionsMenu(menu, inflater);
     }

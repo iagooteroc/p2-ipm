@@ -11,7 +11,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/category_name" />
+        android:layout_marginBottom="16dp"
+        android:hint="@string/category_name"
+        android:textSize="16sp"
+        android:height="48dp" />
 
 </LinearLayout>
