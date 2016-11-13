@@ -14,9 +14,9 @@ public class MultiChoiceListenerImpl implements AbsListView.MultiChoiceModeListe
     private static boolean is_edit_visible = true;
     private static boolean change_edit = false; // indica si hay que cambiar la visibilidad de edit
     private ArrayAdapter<String> adapter;
-    private ActivityCommunications parent;
+    private DisplaysCommunications parent;
 
-    public MultiChoiceListenerImpl(ActivityCommunications parent){
+    public MultiChoiceListenerImpl(DisplaysCommunications parent){
         this.parent = parent;
     }
 
@@ -75,7 +75,7 @@ public class MultiChoiceListenerImpl implements AbsListView.MultiChoiceModeListe
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         // Inflate the menu for the CAB
-        adapter = new ArrayAdapter<>(parent.getActivity(),
+        adapter = new ArrayAdapter<>(parent.getContext(),
                 android.R.layout.simple_list_item_multiple_choice, android.R.id.text1,
                 parent.getElements());
         parent.setAdapter(adapter);   // Cambiamos el adaptador a uno de selección múltiple
@@ -90,7 +90,7 @@ public class MultiChoiceListenerImpl implements AbsListView.MultiChoiceModeListe
     public void onDestroyActionMode(ActionMode mode) {
         // Here you can make any necessary updates to the activity when
         // the CAB is removed. By default, selected items are deselected/unchecked.
-        adapter = new ArrayAdapter<>(parent.getActivity(),
+        adapter = new ArrayAdapter<>(parent.getContext(),
                 android.R.layout.simple_list_item_1, android.R.id.text1,
                 parent.getElements());
         parent.setAdapter(adapter);   // Volvemos a cambiar el adaptador a uno simple

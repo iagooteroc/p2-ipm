@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">P2</string>
-    <string name="add">Añadir</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
     <string name="category_name">Name</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -9,4 +11,8 @@
     <string name="delete_warning_sing">Are you sure you want to remove this entry?</string>
     <string name="error_empty_name">Category name cannot be empty</string>
     <string name="error_repeated_name">This name is already in use</string>
+    <string name="no_elements_found">No elements found</string>
+    <string name="orientation_changed">Orientation changed in less than 1 sec</string>
+    <string name="faced_down">Faced down between 1 and 2 secs</string>
+    <string name="shake_detected">Shake detected</string>
 </resources>

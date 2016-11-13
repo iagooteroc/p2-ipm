@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    tools:context="android.ipm.p2.MainActivity"
+    android:theme="@style/AppTheme">
+
+    <fragment class="android.ipm.p2.DisplayCategoriesFragment"
+        android:id="@+id/categories_fragment"
+        android:theme="@style/AppTheme"
+        android:layout_weight="1"
+        android:layout_width="0px"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:id="@+id/subfragment_container"
+        android:theme="@style/AppTheme"
+        android:layout_weight="1"
+        android:layout_width="0px"
+        android:layout_height="match_parent"/>
+</LinearLayout>
